@@ -39,12 +39,27 @@ const page = pagination.getCurrentPage();
 
 const api = new UnsplashAPI();
 
-api.getPopularImages(page).then(({ total, results }) => {
-  container.classList.remove('is-hidden');
-  pagination.reset(total);
-  const markup = createGalleryCard(results);
-  jsGallery.insertAdjacentHTML('afterbegin', markup);
-});
+// api.getPopularImages(page).then(({ total, results }) => {
+//   container.classList.remove('is-hidden');
+//   pagination.reset(total);
+//   const markup = createGalleryCard(results);
+//   jsGallery.insertAdjacentHTML('afterbegin', markup);
+// });
+
+async function loadImages(){
+    try {
+        const data = await api.getPopularImages(page)
+        const {total, results} = data
+        container.classList.remove('is-hidden');
+        pagination.reset(total);
+        const markup = createGalleryCard(results);
+        jsGallery.insertAdjacentHTML('afterbegin', markup);
+    } catch (error) {
+        Notify.failure('Error!!!');
+    }
+}
+
+loadImages()
 
 function popular(event) {
   const currentPage = event.page;
